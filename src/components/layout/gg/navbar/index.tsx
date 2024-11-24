@@ -1,43 +1,49 @@
-"use client"
+'use client';
 
-import { ChevronDown, Globe, MapPin, Search, User } from 'lucide-react'
-import Image from "next/image"
-import Link from "next/link"
-import * as React from "react"
+import { ChevronDown, Globe, MapPin, Search, User } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import * as React from 'react';
 
-import { Button } from "@components/ui/button"
+import { Button } from '@components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu"
-import { cn } from "@lib/utils"
+  DropdownMenuTrigger
+} from '@components/ui/dropdown-menu';
+import { cn } from '@lib/utils';
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = React.useState(false)
+  const [isScrolled, setIsScrolled] = React.useState(false);
 
   React.useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY
-      setIsScrolled(scrollPosition > 0)
-    }
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 0);
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <header
       className={cn(
-        "fixed inset-x-14 right-0 top-0 z-50 transition-colors duration-300",
-        isScrolled ? "bg-white" : "bg-transparent"
+        'fixed inset-x-0 right-0 top-0 z-50 transition-colors duration-300',
+        isScrolled ? 'bg-white' : 'bg-transparent'
       )}
     >
       <div className="container flex flex-col items-center">
-        <div className="flex w-full justify-between py-2">
+        <div className="flex w-full justify-between py-2 pl-12">
           <Link href="/" className="flex items-center space-x-2">
-            <Image src="/media/nav-desktop-logo-blue.svg" alt="Grey Goose" width={120} height={40} className="h-10 w-auto" />
+            <Image
+              src="/media/nav-desktop-logo-blue.svg"
+              alt="Grey Goose"
+              width={120}
+              height={40}
+              className="h-10 w-auto"
+            />
           </Link>
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="icon" aria-label="Find Location">
@@ -51,7 +57,7 @@ export default function Navbar() {
             </Button>
           </div>
         </div>
-        <nav className="flex h-16 items-center justify-end w-full">
+        <nav className="flex h-16 w-full items-center justify-end">
           <div className="hidden md:flex md:items-center md:space-x-8">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -109,6 +115,5 @@ export default function Navbar() {
         </nav>
       </div>
     </header>
-  )
+  );
 }
-

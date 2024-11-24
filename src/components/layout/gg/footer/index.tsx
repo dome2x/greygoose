@@ -1,148 +1,78 @@
-import { Button } from '@components/ui/button';
-import { Input } from '@components/ui/input';
-import { Facebook, Instagram, Youtube } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import Image from 'next/image';
+import { SiFacebook, SiInstagram, SiX, SiYoutube } from '@icons-pack/react-simple-icons';
 import Link from 'next/link';
 
 export default function Footer() {
-  const t = useTranslations('footer');
-
   return (
-    <footer className="w-full">
-      {/* Newsletter Section */}
-      <div className="bg-[#3e2a1d] bg-[url('/media/assets_8d037472ddea4270ba7fee1b930ca367_b73d0dd327e2449d8e428ee15e42d391.jpeg')] bg-cover bg-center py-12 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <p className="mb-2 text-sm tracking-widest">{t('stay_in_the_know')}</p>
-          <h2 className="mb-6 text-2xl font-light tracking-wider">
-            {t('get_the_latest_news_in_your_box')}
-          </h2>
-          <form className="mx-auto flex max-w-3xl flex-col gap-4 sm:flex-row">
-            <Input type="text" placeholder="Your name" className="bg-white text-black" />
-            <Input type="email" placeholder="Your e-mail" className="bg-white text-black" />
-            <Button className="bg-[#b5985a] hover:bg-[#9a8049]">SUBMIT</Button>
-          </form>
+    <footer className="bg-[#00205B] px-4 py-8 text-white">
+      <div className="container mx-auto flex flex-col items-center gap-8">
+        <h2 className="font-serif text-2xl">SIP RESPONSIBLY</h2>
+
+        {/* Social Media Icons */}
+        <div className="flex gap-6">
+          <Link href="#" className="hover:opacity-80">
+            <SiFacebook size={24} />
+            <span className="sr-only">Facebook</span>
+          </Link>
+          <Link href="#" className="hover:opacity-80">
+            <SiX size={24} />
+            <span className="sr-only">Twitter</span>
+          </Link>
+          <Link href="#" className="hover:opacity-80">
+            <SiYoutube size={24} />
+            <span className="sr-only">YouTube</span>
+          </Link>
+          <Link href="#" className="hover:opacity-80">
+            <SiInstagram size={24} />
+            <span className="sr-only">Instagram</span>
+          </Link>
         </div>
-      </div>
 
-      {/* Logo */}
-      <div className="container mx-auto px-4 py-8 text-center">
-        <Link href="/" className="text-xl font-light tracking-widest text-[#b5985a]">
-          Grey Goose
-        </Link>
-        <p className="text-xs text-muted-foreground">{t('since')}</p>
-      </div>
+        {/* Navigation Links */}
+        <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+          <Link href="/contact" className="hover:underline">
+            Contact
+          </Link>
+          <Link href="/terms" className="hover:underline">
+            Terms & Conditions
+          </Link>
+          <Link href="/privacy" className="hover:underline">
+            Privacy Policy
+          </Link>
+          <Link href="/cookie" className="hover:underline">
+            Cookie Policy
+          </Link>
+          <Link href="/media" className="hover:underline">
+            Media
+          </Link>
+          <Link href="/careers" className="hover:underline">
+            Careers
+          </Link>
+          <Link href="/faqs" className="hover:underline">
+            FAQs
+          </Link>
+          <Link href="/sitemap" className="hover:underline">
+            Site Map
+          </Link>
+        </nav>
 
-      {/* Main Navigation */}
-      <nav className="border-y">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 gap-4 py-4 text-center text-sm md:grid-cols-4 lg:grid-cols-7">
-            <Link href="#" className="hover:text-[#b5985a] text-nowrap">
-              {t('about')}
+        {/* Legal Text */}
+        <div className="max-w-3xl space-y-2 text-center text-xs">
+          <p>
+            FOR MORE INFORMATION ON ALCOHOL RESPONSIBILITY VISIT:{' '}
+            <Link href="https://ResponsibleDrinking.Org" className="underline">
+              ResponsibleDrinking.Org
             </Link>
-            <Link href="#" className="hover:text-[#b5985a] text-nowrap">
-              {t('heritage')}
+            ,{' '}
+            <Link href="https://ResponsibleDrinking.Eu" className="underline">
+              ResponsibleDrinking.Eu
+            </Link>{' '}
+            AND{' '}
+            <Link href="https://Drinkaware" className="underline">
+              Drinkaware
             </Link>
-            <Link href="#" className="hover:text-[#b5985a] text-nowrap">
-              {t('press')}
-            </Link>
-            <Link href="#" className="hover:text-[#b5985a] text-nowrap">
-              {t('payment')}
-            </Link>
-            <Link href="#" className="hover:text-[#b5985a] text-nowrap">
-              {t('contact')}
-            </Link>
-            <Link href="#" className="hover:text-[#b5985a] text-nowrap text-right">
-              {t('customer_service')}
-            </Link>
-            <Link href="#" className="hover:text-[#b5985a] text-nowrap text-right">
-              {t('FAQS')}
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-4 border-t py-4 text-center text-sm md:grid-cols-3 lg:grid-cols-6">
-            <Link href="#" className="hover:text-[#b5985a]">
-              {t('shop')}
-            </Link>
-            <Link href="#" className="hover:text-[#b5985a]">
-              {t('store_locator')}
-            </Link>
-            <Link href="#" className="hover:text-[#b5985a]">
-              {t('track_order')}
-            </Link>
-            <Link href="#" className="hover:text-[#b5985a]">
-              {t('cigar_knowledge')}
-            </Link>
-            <Link href="#" className="hover:text-[#b5985a]">
-              {t('news_events')}
-            </Link>
-            <Link href="#" className="hover:text-[#b5985a]">
-              {t('retailer_portal')}
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* Social Media */}
-      <div className="container mx-auto flex justify-center gap-6 py-8">
-        <Link href="#" className="text-muted-foreground hover:text-[#b5985a]">
-          <Facebook className="h-6 w-6" />
-          <span className="sr-only">Facebook</span>
-        </Link>
-        <Link href="#" className="text-muted-foreground hover:text-[#b5985a]">
-          <Instagram className="h-6 w-6" />
-          <span className="sr-only">Instagram</span>
-        </Link>
-        <Link href="#" className="text-muted-foreground hover:text-[#b5985a]">
-          <Youtube className="h-6 w-6" />
-          <span className="sr-only">YouTube</span>
-        </Link>
-      </div>
-
-      {/* Warning Message */}
-      <div className="bg-muted py-4 text-center text-sm">
-        <p className="font-semibold">{t('surgeon_general_warning_title')}</p>
-        <p className="text-muted-foreground">{t('surgeon_general_warning')}</p>
-      </div>
-
-      {/* Security Badges */}
-      <div className="container mx-auto px-4 py-8 text-center">
-        <p className="mb-4 text-xs uppercase text-muted-foreground">
-          Highest level of encryption, security and trust
-        </p>
-        <div className="flex justify-center gap-8">
-          <Image
-            src="/placeholder.svg"
-            alt="Veratad"
-            width={120}
-            height={40}
-            className="h-10 w-auto"
-          />
-          <Image src="/placeholder.svg" alt="CSC" width={120} height={40} className="h-10 w-auto" />
-        </div>
-      </div>
-
-      {/* Footer Bottom */}
-      <div className="container mx-auto px-4 py-6 text-center">
-        <p className="mb-4 text-sm text-muted-foreground">{t('copyright')}</p>
-        <div className="flex flex-wrap justify-center gap-4 text-xs text-muted-foreground">
-          <Link href="#" className="hover:text-[#b5985a]">
-            {t('terms_and_conditions')}
-          </Link>
-          <Link href="#" className="hover:text-[#b5985a]">
-            {t('privacy_policy')}
-          </Link>
-          <Link href="#" className="hover:text-[#b5985a]">
-            {t('privacy_settings')}
-          </Link>
-          <Link href="#" className="hover:text-[#b5985a]">
-            {t('accessibility')}
-          </Link>
-          <Link href="#" className="hover:text-[#b5985a]">
-            {t('cookie_policy')}
-          </Link>
-          <Link href="#" className="hover:text-[#b5985a]">
-            {t('about_oettinger_greygoose_ag')}
-          </Link>
+            . SHARE CONTENT WITH THOSE OF LEGAL DRINKING AGE AND OVER ONLY.
+          </p>
+          <p>©2024 GREY GOOSE. ITS TRADE DRESS, AND THE GEESE DEVICE ARE TRADEMARKS.</p>
         </div>
       </div>
     </footer>

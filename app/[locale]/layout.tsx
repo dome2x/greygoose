@@ -1,4 +1,3 @@
-import Navbar from '@components/layout/gg/navbar';
 import QueryProvider from '@components/query-provider';
 import { routing } from '@i18n/routing';
 import { ensureStartsWith } from '@lib/utils';
@@ -29,12 +28,12 @@ export const metadata = {
   },
   ...(twitterCreator &&
     twitterSite && {
-    twitter: {
-      card: 'summary_large_image',
-      creator: twitterCreator,
-      site: twitterSite
-    }
-  })
+      twitter: {
+        card: 'summary_large_image',
+        creator: twitterCreator,
+        site: twitterSite
+      }
+    })
 };
 
 const inter = Inter({
@@ -43,10 +42,13 @@ const inter = Inter({
   variable: '--font-inter'
 });
 
-export default async function RootLayout(
-  { children, params: { locale } }:
-    { children: ReactNode, params: { locale: string } }) {
-
+export default async function RootLayout({
+  children,
+  params: { locale }
+}: {
+  children: ReactNode;
+  params: { locale: string };
+}) {
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
@@ -54,20 +56,24 @@ export default async function RootLayout(
   const messages = await getMessages({ locale });
   return (
     <html lang="en" className={inter.variable}>
-      <body className="bg-neutral-50 text-black selection:bg-teal-300 dark:bg-neutral-900 dark:text-white dark:selection:bg-pink-500 dark:selection:text-white container max-w-6xl">
-      <div className="fixed inset-0 -z-10">
-        <Image
-          src="/media/homepage-hero-bg.jpg"
-          alt="Mountain landscape"
-          fill
-          className="object-cover"
-          priority
-        />
-      </div>
+      <body
+        className={
+          'bg-neutral-50 text-black selection:bg-teal-300 dark:bg-neutral-900 ' +
+          'container mx-auto max-w-6xl items-center dark:text-white dark:selection:bg-pink-500 dark:selection:text-white'
+        }
+      >
+        <div className="fixed inset-0 -z-10 max-w-7xl">
+          <Image
+            src="/media/homepage-hero-bg.jpg"
+            alt="Mountain landscape"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
 
         <NextIntlClientProvider messages={messages}>
           <QueryProvider>
-            <Navbar />
             <Suspense>
               <main>{children}</main>
             </Suspense>

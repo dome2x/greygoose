@@ -1,5 +1,5 @@
 export const revalidate = 1;
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
 
 // Example file structure, app/[...page]/page.tsx
 // You could alternatively use src/app/[...page]/page.tsx
@@ -18,27 +18,27 @@ interface PageProps {
 
 export default async function Page(props: PageProps) {
   const { locale, page } = props.params;
-  
-  console.log('********* PAGE', locale, `/${locale}/` + (page?.join("/") || ""));
-  const model = "page";
+
+  console.log('********* PAGE', locale, `/${locale}/` + (page?.join('/') || ''));
+  const model = 'page';
   const content = await builder
     // Get the page content from Builder with the specified options
-    .get("page", {
+    .get('page', {
       userAttributes: {
         locale,
         // Use the page path specified in the URL to fetch the content
-        urlPath: `/${locale}/` + (page?.join("/") || ""),
+        urlPath: `/${locale}/` + (page?.join('/') || '')
       },
       options: {
         locale
       },
       // Set prerender to false to return JSON instead of HTML
-      prerender: false,
+      prerender: false
     })
     // Convert the result to a promise
     .toPromise();
 
-  console.log('********* CONTENT', content);
+  // console.log('********* CONTENT', content);
   return (
     <>
       {/* Render the Builder page */}
