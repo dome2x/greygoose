@@ -1,6 +1,5 @@
-import Hero from '@components/gg/hero';
-import Footer from '@components/layout/footer';
-import Link from 'next/link';
+import Footer from '@components/layout/gg/footer';
+import Navbar from '@components/layout/gg/navbar';
 import { Suspense } from 'react';
 
 export const runtime = 'edge';
@@ -15,8 +14,7 @@ export const metadata = {
 export default async function HomePage() {
   return (
     <>
-      <Link href="/en-GB/bio/home">Home</Link>
-      <Hero />
+      <Navbar />
       <Suspense>
         <Suspense>
           <Footer />
