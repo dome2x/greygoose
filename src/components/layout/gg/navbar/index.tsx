@@ -1,5 +1,6 @@
 'use client';
 
+import { builder } from '@builder.io/sdk';
 import { ChevronDown, Globe, MapPin, Search, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,12 +8,69 @@ import * as React from 'react';
 
 import { Button } from '@components/ui/button';
 import { cn } from '@lib/utils';
+import { useQuery } from '@tanstack/react-query';
 import { useLocale } from 'next-intl';
+
+type MenuItems = {
+  itemTitle: string;
+  itemTarget: string;
+  itemMedia: string;
+  submenu?: MenuItems[];
+};
+type NavMenus = {
+  brand: string;
+  menu: MenuItems[];
+};
+
+type BrandMenu = {
+  brandMenu: NavMenus[];
+};
+
+// Replace with your Public API Key.
+builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
 
 export default function Navbar() {
   const locale = useLocale();
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [activeDropdown, setActiveDropdown] = React.useState<string | null>(null);
+
+  console.log('****************** LOCALE', locale);
+  const menuData = useQuery<BrandMenu>({
+    queryKey: ['menu'],
+    queryFn: async () => {
+      try {
+        const res = await builder.get('menu', { prerender: false });
+        console.log('************ RES and LOCALE', res, locale);
+        return res.data;
+      } catch (error) {
+        console.error('Error fetching menu data', error);
+        return error;
+      }
+    }
+  });
+  let thisMenu = [] as MenuItems[];
+  if (menuData.data) {
+    console.log('****************** menu', menuData.data);
+    const thisBrandsMenu = menuData.data.brandMenu.filter((item) => item.brand === 'Grey Goose');
+    console.log('****************** FILTERED menu', thisBrandsMenu);
+    thisMenu = thisBrandsMenu.flatMap((item) => {
+      return item.menu.map((menuItem) => {
+        return {
+          itemTitle: menuItem.itemTitle,
+          itemTarget: menuItem.itemTarget,
+          itemMedia: menuItem.itemMedia,
+          submenu: menuItem.submenu?.map((subMenuItem) => {
+            return {
+              itemTitle: subMenuItem.itemTitle,
+              itemTarget: subMenuItem.itemTarget,
+              itemMedia: subMenuItem.itemMedia
+            };
+          })
+        };
+      });
+    });
+    console.log('****************** FILTERED menu', thisMenu);
+  }
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -40,7 +98,11 @@ export default function Navbar() {
         <div className="mr-8 flex-shrink-0 pl-12">
           <Link href={`/${locale}/gg/home`} className="block py-4">
             <Image
-              src="/media/nav-desktop-logo-blue.svg"
+              src={
+                isScrolled || activeDropdown
+                  ? '/media/nav-desktop-logo-blue.svg'
+                  : '/media/nav-desktop-logo-white.svg'
+              }
               alt="Grey Goose"
               width={120}
               height={60}
@@ -64,30 +126,25 @@ export default function Navbar() {
           </div>
           <nav className="flex h-16 items-center justify-end">
             <div className="hidden md:flex md:items-center md:space-x-8">
-              <Button
-                variant="ghost"
-                className="text-sm font-medium uppercase tracking-wide"
-                onClick={() => toggleDropdown('products')}
-              >
-                Products <ChevronDown className="ml-1 h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                className="text-sm font-medium uppercase tracking-wide"
-                onClick={() => toggleDropdown('cocktails')}
-              >
-                Cocktails <ChevronDown className="ml-1 h-4 w-4" />
-              </Button>
-              <Button variant="ghost" asChild>
-                <Link href="/explore" className="text-sm font-medium uppercase tracking-wide">
-                  Explore
-                </Link>
-              </Button>
-              <Button variant="ghost" asChild>
-                <Link href="/buy" className="text-sm font-medium uppercase tracking-wide">
-                  Buy
-                </Link>
-              </Button>
+              {thisMenu.map((brandMenu) => (
+                <Button
+                  key={brandMenu.itemTitle}
+                  variant="ghost"
+                  className="text-sm font-medium uppercase tracking-wide"
+                  onClick={
+                    brandMenu.submenu && brandMenu.submenu.length > 0
+                      ? () => toggleDropdown(brandMenu.itemTitle)
+                      : () => {}
+                  }
+                >
+                  {brandMenu.itemTitle}{' '}
+                  {brandMenu.submenu && brandMenu.submenu.length > 0 ? (
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                  ) : (
+                    <></>
+                  )}
+                </Button>
+              ))}
               <Button variant="ghost" size="icon" aria-label="Search">
                 <Search className="h-5 w-5" />
               </Button>
@@ -101,42 +158,29 @@ export default function Navbar() {
       {activeDropdown && (
         <div className="absolute left-0 right-0 max-h-6 border-t border-gray-400 bg-white shadow-md">
           <div className="container items-center py-1">
-            {activeDropdown === 'products' && (
-              <div className="flex-cols flex justify-center gap-8">
-                <span className="grow" />
-                <Link href="/buy" className="mb-4 text-xs font-light hover:underline">
-                  All Products
-                </Link>
-                <Link href="/buy" className="mb-4 text-xs font-light hover:underline">
-                  GREY GOOSE® ALTIUS
-                </Link>
-                <Link href="/buy" className="mb-4 text-xs font-light hover:underline">
-                  Flavoured Products
-                </Link>
-                <Link href="/buy" className="mb-4 text-xs font-light hover:underline">
-                  Limited Edition
-                </Link>
-                <span className="grow" />
-              </div>
-            )}
-            {activeDropdown === 'cocktails' && (
-              <div className="flex-cols flex justify-center gap-8">
-                <span className="grow" />
-                <Link href="/buy" className="mb-4 text-xs font-light hover:underline">
-                  All Cocktails
-                </Link>
-                <Link href="/buy" className="mb-4 text-xs font-light hover:underline">
-                  Collections
-                </Link>
-                <Link href="/buy" className="mb-4 text-xs font-light hover:underline">
-                  Vive la Vodka!
-                </Link>
-                <Link href="/buy" className="mb-4 text-xs font-light hover:underline">
-                  Cocktail Experiences
-                </Link>
-                <span className="grow" />
-              </div>
-            )}
+            {thisMenu.map((brandMenu) => {
+              if (brandMenu.submenu && brandMenu.submenu.length > 0) {
+                return (
+                  <>
+                    {activeDropdown === brandMenu.itemTitle && (
+                      <div className="flex-cols flex justify-center gap-8">
+                        <span className="grow" />
+                        {brandMenu.submenu.map((subMenu) => (
+                          <Link
+                            key={subMenu.itemTitle}
+                            href={subMenu.itemTarget}
+                            className="mb-4 text-xs font-light uppercase hover:underline"
+                          >
+                            {subMenu.itemTitle}
+                          </Link>
+                        ))}
+                        <span className="grow" />
+                      </div>
+                    )}
+                  </>
+                );
+              }
+            })}
           </div>
         </div>
       )}

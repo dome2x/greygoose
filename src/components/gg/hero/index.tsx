@@ -17,7 +17,7 @@ interface HeroContent {
 export default function Hero() {
   const locale = useLocale();
 
-  console.log("****************** LOCALE", locale);
+  console.log('****************** LOCALE', locale);
   const heroData = useQuery<HeroContent>({
     queryKey: ['hero-content'],
     queryFn: async () => {
@@ -36,23 +36,6 @@ export default function Hero() {
     hero = heroData.data as unknown as HeroContent;
   }
   console.log('****************** hero', heroData.data, locale);
-
-  // const t = useTranslations("hero");
-  // const [hero, setHero] = useState({
-  //   title: '[[[Empty]]]',
-  //   subtitle: 'subtitle',
-  //   cta: 'DISCOVER MORE',
-  //   videoUrl: '/media/ad97e522-d055a09d.mp4'
-  // } as HeroContent);
-  // const locale = useLocale();
-  // useEffect(() => {
-  //   builder.get('hero-content', { locale }).then((content) => {
-  //     if (hero.title === '[[[Empty]]]') {
-  //       console.log('****************** content', content);
-  //       setHero(content.data as HeroContent);
-  //     }
-  //   });
-  // }, [hero, setHero]);
 
   return (
     <>
