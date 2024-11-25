@@ -36,6 +36,7 @@ export default function Navbar() {
       )}
     >
       <div className="container flex items-center">
+        <div className="grow" />
         <div className="mr-8 flex-shrink-0 pl-12">
           <Link href={`/${locale}/gg/home`} className="block py-4">
             <Image

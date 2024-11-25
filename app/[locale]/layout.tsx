@@ -62,7 +62,7 @@ export default async function RootLayout({
           'container mx-auto max-w-6xl items-center dark:text-white dark:selection:bg-pink-500 dark:selection:text-white'
         }
       >
-        <div className="fixed inset-0 -z-10 max-w-7xl">
+        <div className="fixed inset-0 -z-10 w-full">
           <Image
             src="/media/homepage-hero-bg.jpg"
             alt="Mountain landscape"
