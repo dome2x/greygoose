@@ -108,13 +108,13 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        'fixed left-0 right-0 top-0 z-50 transition-colors duration-300',
+        'fixed left-0 right-0 top-0 z-50 w-full place-items-center transition-colors duration-300',
         isScrolled || activeDropdown ? 'bg-white shadow-md' : 'bg-transparent'
       )}
     >
-      <div className="container flex items-center">
-        <div className="grow" />
-        <div className="mr-8 flex-shrink-0 pl-0">
+      <div className="mx-auto flex max-w-screen-lg items-center">
+        {/* <div className="grow" /> */}
+        <div className="grow pl-0">
           <Link
             href={`/${locale}/${(pathname.split('/')[1] as 'gg' | 'p') || 'gg'}/home`}
             className="block py-4"
@@ -128,7 +128,7 @@ export default function Navbar() {
             />
           </Link>
         </div>
-        <div className="flex flex-grow flex-col">
+        <div className="flex grow flex-col">
           <div className="flex justify-end py-2">
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="icon" aria-label="Find Location">

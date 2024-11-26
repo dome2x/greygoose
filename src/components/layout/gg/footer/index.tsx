@@ -18,7 +18,7 @@ export default function Footer({
   const fg =
     fgcolor !== '' && fgcolor !== undefined
       ? `text-[#${rgba2hex(fgcolor).slice(0, -2).toLowerCase()}]`
-      : 'text-white';
+      : 'text-[#ffffff]';
   return (
     <footer className={`${bg} ${fg} px-4 py-8`}>
       <div className="container mx-auto flex flex-col items-center gap-8">
