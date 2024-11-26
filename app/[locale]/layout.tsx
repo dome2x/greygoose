@@ -7,6 +7,7 @@ import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ReactNode, Suspense } from 'react';
+import { headers } from 'next/headers';
 import './globals.css';
 
 const { TWITTER_CREATOR, TWITTER_SITE, SITE_NAME } = process.env;
@@ -35,7 +36,15 @@ export const metadata = {
       }
     })
 };
+//👇 Import Open Sans font
+import { Alegreya } from 'next/font/google';
 
+//👇 Configure our font object
+const openSans = Alegreya({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter'
+});
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -54,24 +63,17 @@ export default async function RootLayout({
   }
 
   const messages = await getMessages({ locale });
+
+  const heads = headers();
+  const pathname = heads.get('x-next-pathname');
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={openSans.variable}>
       <body
         className={
           'bg-neutral-50 text-black selection:bg-teal-300 dark:bg-neutral-900 ' +
           'container mx-auto max-w-6xl items-center dark:text-white dark:selection:bg-pink-500 dark:selection:text-white'
         }
       >
-        <div className="fixed inset-0 -z-10 w-full">
-          <Image
-            src="/media/homepage-hero-bg.jpg"
-            alt="Mountain landscape"
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-
         <NextIntlClientProvider messages={messages}>
           <QueryProvider>
             <Suspense>

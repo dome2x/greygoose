@@ -17,12 +17,11 @@ interface HeroContent {
 export default function Hero() {
   const locale = useLocale();
 
-  console.log('****************** LOCALE', locale);
   const heroData = useQuery<HeroContent>({
     queryKey: ['hero-content'],
     queryFn: async () => {
       const res = await builder.get('hero-content', { locale });
-      console.log('************ RES and LOCALE', res, locale);
+      // console.log('************ RES and LOCALE', res, locale);
       return res.data;
     }
   });
@@ -35,7 +34,7 @@ export default function Hero() {
   if (heroData.data) {
     hero = heroData.data as unknown as HeroContent;
   }
-  console.log('****************** hero', heroData.data, locale);
+  // console.log('****************** hero', heroData.data, locale);
 
   return (
     <>

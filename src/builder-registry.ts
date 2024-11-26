@@ -1,10 +1,10 @@
 'use client';
 import { builder, Builder } from '@builder.io/react';
-import ProductCarousel from '@components/gg/grid/three-items';
-import Hero from '@components/gg/hero';
-import ProductCollection from '@components/gg/product/product-collection';
 import Footer from '@components/layout/gg/footer';
+import Hero from '@components/gg/hero';
 import Navbar from '@components/layout/gg/navbar';
+import ProductCarousel from '@components/gg/grid/three-items';
+import ProductCollection from '@components/gg/product/product-collection';
 
 builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
 
@@ -13,7 +13,21 @@ Builder.registerComponent(Hero, {
 });
 
 Builder.registerComponent(Footer, {
-  name: 'Footer'
+  name: 'Footer',
+  inputs: [
+    {
+      name: 'bgcolor',
+      type: 'color'
+    },
+    {
+      name: 'fgcolor',
+      type: 'color'
+    },
+    {
+      name: 'copyright',
+      type: 'string'
+    }
+  ]
 });
 
 Builder.registerComponent(ProductCarousel, {

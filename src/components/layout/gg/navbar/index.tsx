@@ -10,6 +10,7 @@ import { Button } from '@components/ui/button';
 import { cn } from '@lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useLocale } from 'next-intl';
+import { usePathname } from '@i18n/routing';
 
 type MenuItems = {
   itemTitle: string;
@@ -19,6 +20,8 @@ type MenuItems = {
 };
 type NavMenus = {
   brand: string;
+  brandLogoMain: string;
+  brandLogoAlt?: string;
   menu: MenuItems[];
 };
 
@@ -26,21 +29,25 @@ type BrandMenu = {
   brandMenu: NavMenus[];
 };
 
+const menuMap = {
+  gg: 'Grey Goose',
+  p: 'Patron'
+};
+
 // Replace with your Public API Key.
 builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
 
 export default function Navbar() {
   const locale = useLocale();
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [activeDropdown, setActiveDropdown] = React.useState<string | null>(null);
 
-  console.log('****************** LOCALE', locale);
   const menuData = useQuery<BrandMenu>({
     queryKey: ['menu'],
     queryFn: async () => {
       try {
         const res = await builder.get('menu', { prerender: false });
-        console.log('************ RES and LOCALE', res, locale);
         return res.data;
       } catch (error) {
         console.error('Error fetching menu data', error);
@@ -49,27 +56,37 @@ export default function Navbar() {
     }
   });
   let thisMenu = [] as MenuItems[];
+  let mainBrandIcon = '';
+  let altBrandIcon = '';
   if (menuData.data) {
-    console.log('****************** menu', menuData.data);
-    const thisBrandsMenu = menuData.data.brandMenu.filter((item) => item.brand === 'Grey Goose');
-    console.log('****************** FILTERED menu', thisBrandsMenu);
-    thisMenu = thisBrandsMenu.flatMap((item) => {
-      return item.menu.map((menuItem) => {
-        return {
-          itemTitle: menuItem.itemTitle,
-          itemTarget: menuItem.itemTarget,
-          itemMedia: menuItem.itemMedia,
-          submenu: menuItem.submenu?.map((subMenuItem) => {
-            return {
-              itemTitle: subMenuItem.itemTitle,
-              itemTarget: subMenuItem.itemTarget,
-              itemMedia: subMenuItem.itemMedia
-            };
-          })
-        };
+    const pathKey = (pathname.split('/')[1] as 'gg' | 'p') || 'gg';
+    const lookup = menuMap[pathKey];
+    const thisBrandsMenu = menuData.data.brandMenu.filter((item) => item.brand === lookup);
+    if (thisBrandsMenu.length === 1 && thisBrandsMenu[0]?.brandLogoMain) {
+      mainBrandIcon = thisBrandsMenu[0]?.brandLogoMain;
+      if (thisBrandsMenu[0].brandLogoAlt) {
+        altBrandIcon = thisBrandsMenu[0].brandLogoAlt;
+      } else {
+        altBrandIcon = mainBrandIcon;
+      }
+
+      thisMenu = thisBrandsMenu.flatMap((item) => {
+        return item.menu.map((menuItem) => {
+          return {
+            itemTitle: menuItem.itemTitle,
+            itemTarget: menuItem.itemTarget,
+            itemMedia: menuItem.itemMedia,
+            submenu: menuItem.submenu?.map((subMenuItem) => {
+              return {
+                itemTitle: subMenuItem.itemTitle,
+                itemTarget: subMenuItem.itemTarget,
+                itemMedia: subMenuItem.itemMedia
+              };
+            })
+          };
+        });
       });
-    });
-    console.log('****************** FILTERED menu', thisMenu);
+    }
   }
 
   React.useEffect(() => {
@@ -78,8 +95,10 @@ export default function Navbar() {
       setIsScrolled(scrollPosition > 0);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    if (window) {
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
   }, []);
 
   const toggleDropdown = (menu: string) => {
@@ -95,14 +114,13 @@ export default function Navbar() {
     >
       <div className="container flex items-center">
         <div className="grow" />
-        <div className="mr-8 flex-shrink-0 pl-12">
-          <Link href={`/${locale}/gg/home`} className="block py-4">
+        <div className="mr-8 flex-shrink-0 pl-0">
+          <Link
+            href={`/${locale}/${(pathname.split('/')[1] as 'gg' | 'p') || 'gg'}/home`}
+            className="block py-4"
+          >
             <Image
-              src={
-                isScrolled || activeDropdown
-                  ? '/media/nav-desktop-logo-blue.svg'
-                  : '/media/nav-desktop-logo-white.svg'
-              }
+              src={isScrolled || activeDropdown ? altBrandIcon : mainBrandIcon}
               alt="Grey Goose"
               width={120}
               height={60}

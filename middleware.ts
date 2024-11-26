@@ -18,7 +18,9 @@ export async function middleware(request: NextRequest) {
   ) {
     return NextResponse.rewrite(request.url);
   } else {
-    return routingMiddleware(request);
+    const response = routingMiddleware(request);
+    response.headers.set('x-next-pathname', request.nextUrl.pathname);
+    return response;
   }
 }
 

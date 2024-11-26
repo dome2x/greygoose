@@ -47,3 +47,26 @@ export const validateEnvironmentVariables = () => {
     );
   }
 };
+
+export function rgba2hex(orig: string) {
+  var a,
+    isPercent,
+    rgb = orig.replace(/\s/g, '').match(/^rgba?\((\d+),(\d+),(\d+),?([^,\s)]+)?/i),
+    alpha = ((rgb && rgb[4]) || '').trim(),
+    hex = rgb
+      ? (parseInt(rgb[1] ?? '0') | (1 << 8)).toString(16).slice(1) +
+        (parseInt(rgb[2] ?? '0') | (1 << 8)).toString(16).slice(1) +
+        (parseInt(rgb[3] ?? '0') | (1 << 8)).toString(16).slice(1)
+      : orig;
+
+  if (alpha !== '') {
+    a = alpha;
+  } else {
+    a = 0o1;
+  }
+  // multiply before convert to HEX
+  a = ((parseFloat(a.toString()) * 255) | (1 << 8)).toString(16).slice(1);
+  hex = hex + a;
+
+  return hex;
+}

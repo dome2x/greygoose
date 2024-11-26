@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic';
 // You could alternatively use src/app/[...page]/page.tsx
 import { builder } from '@builder.io/sdk';
 import { RenderBuilderContent } from '@components/builder';
+import Image from 'next/image';
 
 // Replace with your Public API Key
 builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
@@ -19,7 +20,6 @@ interface PageProps {
 export default async function Page(props: PageProps) {
   const { locale, page } = props.params;
 
-  console.log('********* PAGE', locale, `/${locale}/` + (page?.join('/') || ''));
   const model = 'page';
   const content = await builder
     // Get the page content from Builder with the specified options
@@ -38,10 +38,21 @@ export default async function Page(props: PageProps) {
     // Convert the result to a promise
     .toPromise();
 
-  // console.log('********* CONTENT', content);
   return (
     <>
       {/* Render the Builder page */}
+      {content && content.data && content.data.backgroundMedia && (
+        <div className="fixed inset-0 -z-10 w-full">
+          <Image
+            src={content.data.backgroundMedia}
+            alt="Mountain landscape"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+      )}
+
       <RenderBuilderContent locale={locale} content={content} model={model} />
     </>
   );

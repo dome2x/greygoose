@@ -1,9 +1,26 @@
+import { Link } from '@i18n/routing';
 import { SiFacebook, SiInstagram, SiX, SiYoutube } from '@icons-pack/react-simple-icons';
-import Link from 'next/link';
+import { rgba2hex } from '@lib/utils';
 
-export default function Footer() {
+export default function Footer({
+  bgcolor,
+  fgcolor,
+  copyright
+}: {
+  bgcolor: string;
+  fgcolor: string;
+  copyright: string;
+}) {
+  const bg =
+    bgcolor !== '' && bgcolor !== undefined
+      ? `bg-[#${rgba2hex(bgcolor).slice(0, -2).toUpperCase()}]`
+      : 'bg-[#00205B]';
+  const fg =
+    fgcolor !== '' && fgcolor !== undefined
+      ? `text-[#${rgba2hex(fgcolor).slice(0, -2).toLowerCase()}]`
+      : 'text-white';
   return (
-    <footer className="bg-[#00205B] px-4 py-8 text-white">
+    <footer className={`${bg} ${fg} px-4 py-8`}>
       <div className="container mx-auto flex flex-col items-center gap-8">
         <h2 className="font-serif text-2xl">SIP RESPONSIBLY</h2>
 
@@ -50,7 +67,7 @@ export default function Footer() {
           <Link href="/faqs" className="hover:underline">
             FAQs
           </Link>
-          <Link href="/sitemap" className="hover:underline">
+          <Link href="/" className="hover:underline">
             Site Map
           </Link>
         </nav>
@@ -72,7 +89,7 @@ export default function Footer() {
             </Link>
             . SHARE CONTENT WITH THOSE OF LEGAL DRINKING AGE AND OVER ONLY.
           </p>
-          <p>©2024 GREY GOOSE. ITS TRADE DRESS, AND THE GEESE DEVICE ARE TRADEMARKS.</p>
+          <p>{copyright}</p>
         </div>
       </div>
     </footer>
