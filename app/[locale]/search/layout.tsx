@@ -1,4 +1,4 @@
-import Footer from '@components/layout/footer';
+import Footer from '@components/layout/gg/footer';
 import Collections from '@components/layout/search/collections';
 import FilterList from '@components/layout/search/filter';
 import { sorting } from '@lib/constants';
@@ -16,7 +16,11 @@ export default function SearchLayout({ children }: { children: React.ReactNode }
           <FilterList list={sorting} title="Sort by" />
         </div>
       </div>
-      <Footer />
+      <Footer
+        bgcolor="rgba(0, 32, 91, 1)"
+        fgcolor="rgba(255, 255, 255, 1)"
+        copyright="©2024 GREY GOOSE. ITS TRADE DRESS, AND THE GEESE DEVICE ARE TRADEMARKS."
+      />
     </Suspense>
   );
 }

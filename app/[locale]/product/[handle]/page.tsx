@@ -18,8 +18,8 @@ export async function generateMetadata({
 }: {
   params: { handle: string };
 }): Promise<Metadata> {
-  const productIdBySlug = await getProductIdBySlug("/" + params.handle + "/");
-  const product = await getProduct("" + productIdBySlug?.entityId);
+  const productIdBySlug = await getProductIdBySlug('/' + params.handle + '/');
+  const product = await getProduct('' + productIdBySlug?.entityId);
 
   if (!product) return notFound();
 
@@ -53,8 +53,8 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({ params }: { params: { handle: string } }) {
-  const productIdBySlug = await getProductIdBySlug("/" + params.handle + "/");
-  const product = await getProduct("" + productIdBySlug?.entityId);
+  const productIdBySlug = await getProductIdBySlug('/' + params.handle + '/');
+  const product = await getProduct('' + productIdBySlug?.entityId);
 
   if (!product) return notFound();
 
@@ -103,7 +103,11 @@ export default async function ProductPage({ params }: { params: { handle: string
         </Suspense>
       </div>
       <Suspense>
-        <Footer />
+        <Footer
+          bgcolor="rgba(0, 32, 91, 1)"
+          fgcolor="rgba(255, 255, 255, 1)"
+          copyright="©2024 GREY GOOSE. ITS TRADE DRESS, AND THE GEESE DEVICE ARE TRADEMARKS."
+        />
       </Suspense>
     </>
   );
