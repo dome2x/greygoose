@@ -56,7 +56,7 @@ function AnimatedButton({ image, text, target }: AnimatedButtonProps) {
       variant="secondary"
       className="group relative h-48 w-48 flex-col space-y-4 overflow-hidden rounded-xl border-2 border-white/20 bg-white/10 p-0 text-xl text-white backdrop-blur-md transition-all duration-300 hover:scale-105 hover:text-black"
       onClick={() => {
-        router.push(target);
+        router.push(target, { locale: 'en-GB' });
       }}
     >
       <div className="relative z-10 flex h-full w-full flex-col items-center justify-center">

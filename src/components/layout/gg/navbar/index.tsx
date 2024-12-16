@@ -1,37 +1,48 @@
 'use client';
 
 import { builder } from '@builder.io/sdk';
-import { ChevronDown, Globe, MapPin, Search, User } from 'lucide-react';
+import { ChevronDown, MapPin, Search, User } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import * as React from 'react';
 
 import { Button } from '@components/ui/button';
+import { Link, usePathname } from '@i18n/routing';
 import { cn } from '@lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useLocale } from 'next-intl';
-import { usePathname } from '@i18n/routing';
+import LocaleSelector, { Locale } from './locale-selector';
 
-type MenuItems = {
+type LocalisedString = {
+  [key: string]: string;
+};
+
+type MenuItem = {
+  itemTitle: LocalisedString;
+  itemTarget: string;
+  itemMedia: string;
+  submenu?: MenuItem[];
+};
+type RenderableMenuItem = {
   itemTitle: string;
   itemTarget: string;
   itemMedia: string;
-  submenu?: MenuItems[];
+  submenu?: RenderableMenuItem[];
 };
-type NavMenus = {
-  brand: string;
+type NavMenu = {
+  brand: LocalisedString | string;
   brandLogoMain: string;
   brandLogoAlt?: string;
-  menu: MenuItems[];
+  locales: Locale[];
+  menu: MenuItem[];
 };
 
 type BrandMenu = {
-  brandMenu: NavMenus[];
+  brandMenu: NavMenu[];
 };
 
 const menuMap = {
   gg: 'Grey Goose',
-  p: 'Patron'
+  p: 'Patrón'
 };
 
 // Replace with your Public API Key.
@@ -55,14 +66,27 @@ export default function Navbar() {
       }
     }
   });
-  let thisMenu = [] as MenuItems[];
+
+  const extractLocalisedString = (s: LocalisedString): string => {
+    return typeof s === 'object' ? s[locale] || s['Default'] || '' : s || '';
+  };
+
+  let thisMenu = [] as RenderableMenuItem[];
+  let locales = [] as Locale[];
   let mainBrandIcon = '';
   let altBrandIcon = '';
+  console.log('menuData1', menuData);
   if (menuData.data) {
+    console.log('menuData2', menuData.data, pathname);
     const pathKey = (pathname.split('/')[1] as 'gg' | 'p') || 'gg';
+    console.log('pathKey', pathKey);
     const lookup = menuMap[pathKey];
-    const thisBrandsMenu = menuData.data.brandMenu.filter((item) => item.brand === lookup);
+    const thisBrandsMenu = menuData.data.brandMenu.filter((item) =>
+      typeof item.brand === 'object' ? item.brand.Default === lookup : item.brand === lookup
+    );
+    console.log('thisBrandsMenu', thisBrandsMenu);
     if (thisBrandsMenu.length === 1 && thisBrandsMenu[0]?.brandLogoMain) {
+      locales = thisBrandsMenu[0].locales;
       mainBrandIcon = thisBrandsMenu[0]?.brandLogoMain;
       if (thisBrandsMenu[0].brandLogoAlt) {
         altBrandIcon = thisBrandsMenu[0].brandLogoAlt;
@@ -73,12 +97,12 @@ export default function Navbar() {
       thisMenu = thisBrandsMenu.flatMap((item) => {
         return item.menu.map((menuItem) => {
           return {
-            itemTitle: menuItem.itemTitle,
+            itemTitle: extractLocalisedString(menuItem.itemTitle),
             itemTarget: menuItem.itemTarget,
             itemMedia: menuItem.itemMedia,
             submenu: menuItem.submenu?.map((subMenuItem) => {
               return {
-                itemTitle: subMenuItem.itemTitle,
+                itemTitle: extractLocalisedString(subMenuItem.itemTitle),
                 itemTarget: subMenuItem.itemTarget,
                 itemMedia: subMenuItem.itemMedia
               };
@@ -86,6 +110,7 @@ export default function Navbar() {
           };
         });
       });
+      console.log('thisMenu', thisMenu);
     }
   }
 
@@ -108,15 +133,17 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        'fixed left-0 right-0 top-0 z-50 w-full place-items-center transition-colors duration-300',
-        isScrolled || activeDropdown ? 'bg-white shadow-md' : 'bg-transparent'
+        'fixed left-0 right-0 top-0 z-50 w-full place-items-center transition-colors duration-300 ',
+        isScrolled || activeDropdown
+          ? 'bg-white shadow-md'
+          : 'bg-gradient-to-b from-gray-500 to-transparent'
       )}
     >
       <div className="mx-auto flex max-w-screen-lg items-center">
         {/* <div className="grow" /> */}
         <div className="grow pl-0">
           <Link
-            href={`/${locale}/${(pathname.split('/')[1] as 'gg' | 'p') || 'gg'}/home`}
+            href={`/${(pathname.split('/')[1] as 'gg' | 'p') || 'gg'}/home`}
             className="block py-4"
           >
             <Image
@@ -134,9 +161,7 @@ export default function Navbar() {
               <Button variant="ghost" size="icon" aria-label="Find Location">
                 <MapPin className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" aria-label="Change Language">
-                <Globe className="h-5 w-5" />
-              </Button>
+              <LocaleSelector locales={locales} />
               <Button variant="ghost" size="icon" aria-label="Log In">
                 <User className="h-5 w-5" />
               </Button>
@@ -152,12 +177,18 @@ export default function Navbar() {
                   onClick={
                     brandMenu.submenu && brandMenu.submenu.length > 0
                       ? () => toggleDropdown(brandMenu.itemTitle)
-                      : () => {}
+                      : () => {
+                          <></>;
+                        }
                   }
                 >
-                  {brandMenu.itemTitle}{' '}
+                  {(!brandMenu.submenu || brandMenu.submenu.length === 0) && (
+                    <Link href={brandMenu.itemTarget}>{brandMenu.itemTitle} </Link>
+                  )}
                   {brandMenu.submenu && brandMenu.submenu.length > 0 ? (
-                    <ChevronDown className="ml-1 h-4 w-4" />
+                    <>
+                      {brandMenu.itemTitle} <ChevronDown className="ml-1 h-4 w-4" />
+                    </>
                   ) : (
                     <></>
                   )}
@@ -174,10 +205,11 @@ export default function Navbar() {
         </div>
       </div>
       {activeDropdown && (
-        <div className="absolute left-0 right-0 max-h-6 border-t border-gray-400 bg-white shadow-md">
+        <div className={'absolute left-0 right-0 border-t border-gray-400 bg-white shadow-md'}>
           <div className="container items-center py-1">
             {thisMenu.map((brandMenu) => {
               if (brandMenu.submenu && brandMenu.submenu.length > 0) {
+                console.log('brandMenu', brandMenu);
                 return (
                   <>
                     {activeDropdown === brandMenu.itemTitle && (
@@ -187,9 +219,19 @@ export default function Navbar() {
                           <Link
                             key={subMenu.itemTitle}
                             href={subMenu.itemTarget}
-                            className="mb-4 text-xs font-light uppercase hover:underline"
+                            className="mb-4 flex-col justify-items-center text-xs font-light uppercase hover:underline"
                           >
-                            {subMenu.itemTitle}
+                            <span className="text-center">{subMenu.itemTitle}</span>
+                            {subMenu.itemMedia && (
+                              <div className="item-detail relative h-10 w-10">
+                                <Image
+                                  src={subMenu.itemMedia}
+                                  alt=""
+                                  className="object-contain"
+                                  fill
+                                />
+                              </div>
+                            )}
                           </Link>
                         ))}
                         <span className="grow" />

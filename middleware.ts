@@ -35,6 +35,6 @@ export const config = {
      */
     '/((?!api|_next/static|_next/image|favicon.ico|/media/*).*)',
     '/',
-    '/(de|en)-(DE|EN)/:path*'
+    '/(de|en|es)-(DE|EN|ES)/:path*'
   ]
 };

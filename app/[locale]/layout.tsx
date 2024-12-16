@@ -3,11 +3,8 @@ import { routing } from '@i18n/routing';
 import { ensureStartsWith } from '@lib/utils';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { Inter } from 'next/font/google';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ReactNode, Suspense } from 'react';
-import { headers } from 'next/headers';
 import './globals.css';
 
 const { TWITTER_CREATOR, TWITTER_SITE, SITE_NAME } = process.env;
@@ -45,11 +42,11 @@ const openSans = Alegreya({
   display: 'swap',
   variable: '--font-inter'
 });
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter'
-});
+// const inter = Inter({
+//   subsets: ['latin'],
+//   display: 'swap',
+//   variable: '--font-inter'
+// });
 
 export default async function RootLayout({
   children,
@@ -64,8 +61,6 @@ export default async function RootLayout({
 
   const messages = await getMessages({ locale });
 
-  const heads = headers();
-  const pathname = heads.get('x-next-pathname');
   return (
     <html lang="en" className={openSans.variable}>
       <body

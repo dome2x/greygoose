@@ -21,13 +21,15 @@ export default async function Page(props: PageProps) {
   const { locale, page } = props.params;
 
   const model = 'page';
+
+  console.log('************** page', `/` + page?.join('/'), locale);
   const content = await builder
     // Get the page content from Builder with the specified options
     .get('page', {
       userAttributes: {
         locale,
         // Use the page path specified in the URL to fetch the content
-        urlPath: `/${locale}/` + (page?.join('/') || '')
+        urlPath: `/` + (page?.join('/') || '')
       },
       options: {
         locale
@@ -38,6 +40,7 @@ export default async function Page(props: PageProps) {
     // Convert the result to a promise
     .toPromise();
 
+  console.log('************** content', content, locale, model);
   return (
     <>
       {/* Render the Builder page */}
