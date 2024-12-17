@@ -302,7 +302,10 @@ export async function addToCart(
   return bigCommerceToVercelCart(bigCommerceCart, productsByIdList, checkout, checkoutUrl);
 }
 
-export async function removeFromCart(cartId: string, lineIds: string[]): Promise<VercelCart | undefined> {
+export async function removeFromCart(
+  cartId: string,
+  lineIds: string[]
+): Promise<VercelCart | undefined> {
   let cartState: { status: number; body: BigCommerceDeleteCartItemOperation };
   const removeCartItem = async (itemId: string) => {
     const res = await bigCommerceFetch<BigCommerceDeleteCartItemOperation>({
@@ -333,7 +336,7 @@ export async function removeFromCart(cartId: string, lineIds: string[]): Promise
 
   const cart = cartState!.body.data.cart.deleteCartLineItem.cart;
 
-  if (cart === null)  {
+  if (cart === null) {
     return undefined;
   }
 
@@ -443,7 +446,7 @@ export async function getCollectionProducts({
     });
 
     if (!res.body.data.site.newestProducts) {
-      console.log(`No collection found for \`${collection}\``);
+      console.info(`No collection found for \`${collection}\``);
       return [];
     }
     const productList = res.body.data.site.newestProducts.edges.map((item) => item.node);
@@ -460,7 +463,7 @@ export async function getCollectionProducts({
     });
 
     if (!res.body.data.site.featuredProducts) {
-      console.log(`No collection found for \`${collection}\``);
+      console.info(`No collection found for \`${collection}\``);
       return [];
     }
     const productList = res.body.data.site.featuredProducts.edges.map((item) => item.node);
@@ -481,7 +484,7 @@ export async function getCollectionProducts({
   });
 
   if (!res.body.data.site.category) {
-    console.log(`No collection found for \`${collection}\``);
+    console.info(`No collection found for \`${collection}\``);
     return [];
   }
   const productList = res.body.data.site.category.products.edges.map((item) => item.node);
@@ -612,12 +615,11 @@ export async function getPages(): Promise<VercelPage[]> {
   return pagesList.map((page) => bigCommerceToVercelPageContent(page));
 }
 
-
 export async function getProduct(handle: string | number): Promise<VercelProduct | undefined> {
   const res = await bigCommerceFetch<BigCommerceProductOperation>({
     query: getProductQuery,
     variables: {
-      productId: parseInt("" + handle, 10)
+      productId: parseInt('' + handle, 10)
     }
   });
 

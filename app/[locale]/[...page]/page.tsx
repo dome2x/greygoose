@@ -22,7 +22,7 @@ export default async function Page(props: PageProps) {
 
   const model = 'page';
 
-  console.log('************** page', `/` + page?.join('/'), locale);
+  //console.log('************** page', `/` + page?.join('/'), locale);
   const content = await builder
     // Get the page content from Builder with the specified options
     .get('page', {
@@ -40,7 +40,7 @@ export default async function Page(props: PageProps) {
     // Convert the result to a promise
     .toPromise();
 
-  console.log('************** content', content, locale, model);
+  //console.log('************** content', content, locale, model);
   return (
     <>
       {/* Render the Builder page */}

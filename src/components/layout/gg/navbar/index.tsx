@@ -75,16 +75,12 @@ export default function Navbar() {
   let locales = [] as Locale[];
   let mainBrandIcon = '';
   let altBrandIcon = '';
-  console.log('menuData1', menuData);
   if (menuData.data) {
-    console.log('menuData2', menuData.data, pathname);
     const pathKey = (pathname.split('/')[1] as 'gg' | 'p') || 'gg';
-    console.log('pathKey', pathKey);
     const lookup = menuMap[pathKey];
     const thisBrandsMenu = menuData.data.brandMenu.filter((item) =>
       typeof item.brand === 'object' ? item.brand.Default === lookup : item.brand === lookup
     );
-    console.log('thisBrandsMenu', thisBrandsMenu);
     if (thisBrandsMenu.length === 1 && thisBrandsMenu[0]?.brandLogoMain) {
       locales = thisBrandsMenu[0].locales;
       mainBrandIcon = thisBrandsMenu[0]?.brandLogoMain;
@@ -110,7 +106,6 @@ export default function Navbar() {
           };
         });
       });
-      console.log('thisMenu', thisMenu);
     }
   }
 
@@ -209,7 +204,6 @@ export default function Navbar() {
           <div className="container items-center py-1">
             {thisMenu.map((brandMenu) => {
               if (brandMenu.submenu && brandMenu.submenu.length > 0) {
-                console.log('brandMenu', brandMenu);
                 return (
                   <>
                     {activeDropdown === brandMenu.itemTitle && (
